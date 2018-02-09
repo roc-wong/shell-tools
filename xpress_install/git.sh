@@ -17,14 +17,16 @@
 #      REVISION:  ---
 #===============================================================================
 
-set -o nounset                              # Treat unset variables as an error
+export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+set -x
+#set -o nounset                              # Treat unset variables as an error
 
 GIT_VERSION=git-2.9.5
 
 #-------------------------------------------------------------------------------
 # 安装依赖的软件
 #-------------------------------------------------------------------------------
-yum install -y wget autoconf make gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker
+yum install -y wget autoconf make gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker libxslt asciidoc xmlto
 
 
 #-------------------------------------------------------------------------------
@@ -39,20 +41,23 @@ wget https://www.kernel.org/pub/software/scm/git/$GIT_VERSION.tar.gz
 tar xzvf $GIT_VERSION.tar.gz
 
 cd $GIT_VERSION
-make prefix=/usr/local all
-make prefix=/usr/local install
+make prefix=/usr/local/git all
+make prefix=/usr/local/git install
 source contrib/completion/git-completion.bash
-
 
 #-------------------------------------------------------------------------------
 # 设置系统环境变量
 #-------------------------------------------------------------------------------
-echo "export PATH=$PATH:/usr/local/git/bin" >> /etc/profile
+echo "export GIT_PATH=/usr/local/git/bin" >> /etc/profile
+echo "export GIT_PATH" >> /etc/profile
 source /etc/profile
 
-echo "============================ git ready ============================"
 
 #-------------------------------------------------------------------------------
 # 验证
 #-------------------------------------------------------------------------------
+echo "============================ git ready ============================"
+
 git --version
+
+set +x
