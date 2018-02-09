@@ -19,10 +19,12 @@
 
 export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 set -x
+set -e
 #set -o nounset                              # Treat unset variables as an error
 
 
 GIT_VERSION=git-2.9.5
+GIT_PATH=/usr/local/git/bin
 
 #-------------------------------------------------------------------------------
 # 安装依赖的软件
@@ -34,6 +36,7 @@ yum install -y wget autoconf make gcc curl-devel expat-devel gettext-devel opens
 # 下载git
 #-------------------------------------------------------------------------------
 wget https://www.kernel.org/pub/software/scm/git/$GIT_VERSION.tar.gz 
+#wget http://10.0.30.2/install/tools/git-2.9.5.tar.gz
 
 
 #-------------------------------------------------------------------------------
@@ -49,7 +52,6 @@ source contrib/completion/git-completion.bash
 #-------------------------------------------------------------------------------
 # 设置系统环境变量
 #-------------------------------------------------------------------------------
-echo "export GIT_PATH=/usr/local/git/bin" >> /etc/profile
 echo "export PATH=$PATH:$GIT_PATH:" >> /etc/profile
 source /etc/profile
 
@@ -58,7 +60,7 @@ source /etc/profile
 # 验证
 #-------------------------------------------------------------------------------
 echo "============================ git ready ============================"
-
+cd -
 git --version
 
 
