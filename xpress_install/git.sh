@@ -18,9 +18,37 @@
 #===============================================================================
 
 export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
-set -x
+#set -x
+
+# Only enable exit-on-error after the non-critical colorization stuff,
+# which may fail on systems lacking tput or terminfo
 set -e
-#set -o nounset                              # Treat unset variables as an error
+
+# Treat unset variables as an error
+#set -o nounset                             
+
+
+# Use colors, but only if connected to a terminal, and that terminal
+# supports them.
+if which tput >/dev/null 2>&1; then
+    ncolors=$(tput colors)
+fi
+
+if [ -t 1 ] && [ -n "$ncolors" ] && [ "$ncolors" -ge 8 ]; then
+	RED="$(tput setaf 1)"
+	GREEN="$(tput setaf 2)"
+	YELLOW="$(tput setaf 3)"
+	BLUE="$(tput setaf 4)"
+	BOLD="$(tput bold)"
+	NORMAL="$(tput sgr0)"
+else
+	RED=""
+	GREEN=""
+	YELLOW=""
+	BLUE=""
+	BOLD=""
+	NORMAL=""
+fi
 
 
 GIT_VERSION=git-2.9.5
@@ -52,14 +80,14 @@ source contrib/completion/git-completion.bash
 #-------------------------------------------------------------------------------
 # 设置系统环境变量
 #-------------------------------------------------------------------------------
-echo "export PATH=$PATH:$GIT_PATH:" >> /etc/profile
+echo "GIT_PATH=/usr/local/git/bin" >> /etc/profile
+echo "export PATH=\"$GIT_PATH:\$PATH\"" >> /etc/profile
 source /etc/profile
 
 
 #-------------------------------------------------------------------------------
 # 验证
 #-------------------------------------------------------------------------------
-echo "============================ git ready ============================"
 cd -
 git --version
 
@@ -74,4 +102,14 @@ git config --global alias.st "status"
 git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset' --abbrev-commit"
 
 
-set +x
+printf "${GREEN}"
+echo "                 .-~~~~~~~~~-._       _.-~~~~~~~~~-.                            "
+echo "             __.\'              ~.   .~              \`.__                      "
+echo "           .\'//                  \./                  \\\`.                    "
+echo "         .\'//                     |                     \\\`.                  "
+echo "       .\'// .-~\"\"\"\"\"\"\"~~~~-._     |     _,-~~~~\"\"\"\"\"\"\"~-. \\\`.  "
+echo "     .\'//.-\"                 \`-.  |  .-\'                 \"-.\\\`.          "
+echo "   .\'//______.============-..   \ | /   ..-============.______\\\`.            "
+echo " .\'______________________________\|/______________________________\`.          "
+
+#set +x

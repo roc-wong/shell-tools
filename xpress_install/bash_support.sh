@@ -17,8 +17,37 @@
 #      REVISION:  ---
 #===============================================================================
 
-set -o nounset                              # Treat unset variables as an error
+#set -x
+
+# Only enable exit-on-error after the non-critical colorization stuff,
+# which may fail on systems lacking tput or terminfo
 set -e
+
+# Treat unset variables as an error
+set -o nounset                             
+
+
+# Use colors, but only if connected to a terminal, and that terminal
+# supports them.
+if which tput >/dev/null 2>&1; then
+    ncolors=$(tput colors)
+fi
+
+if [ -t 1 ] && [ -n "$ncolors" ] && [ "$ncolors" -ge 8 ]; then
+        RED="$(tput setaf 1)"
+        GREEN="$(tput setaf 2)"
+        YELLOW="$(tput setaf 3)"
+        BLUE="$(tput setaf 4)"
+        BOLD="$(tput bold)"
+        NORMAL="$(tput sgr0)"
+else
+        RED=""
+        GREEN=""
+        YELLOW=""
+        BLUE=""
+        BOLD=""
+        NORMAL=""
+fi
 
 
 #-------------------------------------------------------------------------------
@@ -71,3 +100,14 @@ fi
 #-------------------------------------------------------------------------------
 echo "filetype plugin on" >> $HOME/.vimrc
 echo "set number" >> $HOME/.vimrc
+
+
+printf "${GREEN}"
+echo "                 .-~~~~~~~~~-._       _.-~~~~~~~~~-.                            "
+echo "             __.\'              ~.   .~              \`.__                      "
+echo "           .\'//                  \./                  \\\`.                    "
+echo "         .\'//                     |                     \\\`.                  "
+echo "       .\'// .-~\"\"\"\"\"\"\"~~~~-._     |     _,-~~~~\"\"\"\"\"\"\"~-. \\\`.  "
+echo "     .\'//.-\"                 \`-.  |  .-\'                 \"-.\\\`.          "
+echo "   .\'//______.============-..   \ | /   ..-============.______\\\`.            "
+echo " .\'______________________________\|/______________________________\`.          "
