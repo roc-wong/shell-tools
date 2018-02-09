@@ -21,6 +21,7 @@ export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 set -x
 #set -o nounset                              # Treat unset variables as an error
 
+
 GIT_VERSION=git-2.9.5
 
 #-------------------------------------------------------------------------------
@@ -39,11 +40,11 @@ wget https://www.kernel.org/pub/software/scm/git/$GIT_VERSION.tar.gz
 # 编译
 #-------------------------------------------------------------------------------
 tar xzvf $GIT_VERSION.tar.gz
-
 cd $GIT_VERSION
 make prefix=/usr/local/git all
 make prefix=/usr/local/git install
 source contrib/completion/git-completion.bash
+
 
 #-------------------------------------------------------------------------------
 # 设置系统环境变量
@@ -59,5 +60,16 @@ source /etc/profile
 echo "============================ git ready ============================"
 
 git --version
+
+
+#-------------------------------------------------------------------------------
+# 默认git 别名配置
+#-------------------------------------------------------------------------------
+git config --global alias.co "checkout"
+git config --global alias.ci "commit"
+git config --global alias.br "branch"
+git config --global alias.st "status"
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset' --abbrev-commit"
+
 
 set +x
