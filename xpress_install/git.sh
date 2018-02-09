@@ -49,7 +49,7 @@ source contrib/completion/git-completion.bash
 # 设置系统环境变量
 #-------------------------------------------------------------------------------
 echo "export GIT_PATH=/usr/local/git/bin" >> /etc/profile
-echo "export GIT_PATH" >> /etc/profile
+echo "export PATH=$PATH:$GIT_PATH:" >> /etc/profile
 source /etc/profile
 
 
