@@ -29,6 +29,12 @@ DEPLOY_HOME=`dirname $0`
 HOST_NAME=`hostname`  
 
 
+#---  FUNCTION  ----------------------------------------------------------------
+#          NAME:  usage
+#   DESCRIPTION:  
+#    PARAMETERS:  
+#       RETURNS:  
+#-------------------------------------------------------------------------------
 usage()
 {
     echo -e "Usage: dump.sh [OPTION]。\n" 
@@ -37,24 +43,6 @@ usage()
     echo -e "备份文件路径：~/output/"
     exit 1
 }
-
-
-#---  FUNCTION  ----------------------------------------------------------------
-#          NAME:  read_pid
-#   DESCRIPTION:  接收用户输入的进程号
-#    PARAMETERS:  
-#       RETURNS:  
-#-------------------------------------------------------------------------------
-read_pid ()
-{	
-    read -p "请输入执行dump的JVM进程号(PID): " pid
-    
-    if [ -z "$pid" ] || [[ ! "$pid" =~ ^-?[0-9]+$ ]]; then  
-        echo "-_- 都特么这时候了，你就不能输入正确的进程ID嘛……"  
-        exit 1;  
-    fi
-    echo ${pid}  
-}	# ----------  end of function read_pid  ----------
 
 
 input_pid=
@@ -89,7 +77,13 @@ if [ ! ${input_pid} ]; then
     ps -ef --width 175 | grep java
     echo -e "\n"
     
-    input_pid=`read_pid`
+    read -p "请输入执行dump的JVM进程号(PID): " pid
+    
+    if [ -z "$pid" ] || [[ ! "$pid" =~ ^-?[0-9]+$ ]]; then  
+        echo "-_- 都特么这时候了，你就不能输入正确的进程ID嘛……"  
+        exit 1;  
+    fi
+    input_pid=${pid}
 fi
 
 DUMP_PIDS=(${input_pid})
