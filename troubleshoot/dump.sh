@@ -38,13 +38,31 @@ usage()
     exit 1
 }
 
-INPUT_PID=
+
+#---  FUNCTION  ----------------------------------------------------------------
+#          NAME:  read_pid
+#   DESCRIPTION:  接收用户输入的进程号
+#    PARAMETERS:  
+#       RETURNS:  
+#-------------------------------------------------------------------------------
+read_pid ()
+{	
+    read -p "请输入执行dump的JVM进程号(PID): " pid
+    
+    if [ -z "$pid" ] || [[ ! "$pid" =~ ^-?[0-9]+$ ]]; then  
+        echo "-_- 都特么这时候了，你就不能输入正确的进程ID嘛……"  
+        exit 1;  
+    fi
+    echo ${pid}  
+}	# ----------  end of function read_pid  ----------
+
+
+input_pid=
 while getopts ":p:h" optname
   do
     case "$optname" in
       "p")
-        echo "Option $optname is specified to ${OPTARG}"
-        INPUT_PID=${OPTARG}
+        input_pid=${OPTARG}
         ;;
       "h")
         usage
@@ -65,15 +83,16 @@ while getopts ":p:h" optname
     esac
 done
 
-if [ ! ${INPUT_PID} ]; then 
-    DUMP_PIDS=`ps  --no-heading -C jsvc -f --width 1000 | grep "$DEPLOY_HOME" |awk '{print $2}'`  
-    if [ -z "$DUMP_PIDS" ]; then  
-        echo "The server $HOST_NAME is not started!"  
-        exit 1;  
-    fi  
-else 
-    DUMP_PIDS=(${INPUT_PID})
+if [ ! ${input_pid} ]; then 
+    echo -e "\n"
+    echo -e "当前运行的java进程有：\n"
+    ps -ef --width 175 | grep java
+    echo -e "\n"
+    
+    input_pid=`read_pid`
 fi
+
+DUMP_PIDS=(${input_pid})
 
 DUMP_ROOT=$OUTPUT_HOME/dump  
 if [ ! -d $DUMP_ROOT ]; then  
@@ -86,7 +105,7 @@ if [ ! -d $DUMP_DIR ]; then
     mkdir -p $DUMP_DIR  
 fi  
 
-echo -e "Dumping the server $HOST_NAME ...\c"  
+echo -e "\n Dumping the server $HOST_NAME ...\c"  
 
 for PID in $DUMP_PIDS ; do  
     $JAVA_HOME/bin/jstack -F $PID > $DUMP_DIR/jstack-$PID.dump 2>&1  
@@ -104,7 +123,7 @@ for PID in $DUMP_PIDS ; do
     $JAVA_HOME/bin/jmap -histo $PID > $DUMP_DIR/jmap-histo-$PID.dump 2>&1  
     echo -e ".\c"  
     if [ -r /usr/sbin/lsof ]; then  
-        /usr/sbin/lsof -p $PID > $DUMP_DIR/lsof-$PID.dump  
+        /usr/sbin/lsof -n -p $PID > $DUMP_DIR/lsof-$PID.dump  
         echo -e ".\c"  
     fi  
 done  
@@ -133,7 +152,7 @@ if [ -r /usr/bin/iostat ]; then
     echo -e ".\c"  
 fi  
 if [ -r /bin/netstat ]; then  
-    /bin/netstat > $DUMP_DIR/netstat.dump  
+    /bin/netstat -n > $DUMP_DIR/netstat.dump  
     echo -e ".\c"  
 fi  
 echo "OK!"
