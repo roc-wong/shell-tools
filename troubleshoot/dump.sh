@@ -72,10 +72,8 @@ while getopts ":p:h" optname
 done
 
 if [ ! ${input_pid} ]; then 
-    echo -e "\n"
     echo -e "当前运行的java进程有：\n"
     ps -ef --width 175 | grep java
-    echo -e "\n"
     
     read -p "请输入执行dump的JVM进程号(PID): " pid
     
@@ -150,4 +148,3 @@ if [ -r /bin/netstat ]; then
     echo -e ".\c"  
 fi  
 echo "OK!"
-
