@@ -32,6 +32,8 @@ curl http://olml6iu96.bkt.clouddn.com/script/redis.sh -O && vi +':w ++ff=unix' +
 
 **`vi +':w ++ff=unix' +':q' bash_support.sh` 说明**
 
+我将脚本上传到七牛CDN后，下载后发现无法执行，提示`shell syntax error: unexpected end of file`，猜测是在上传过程中进行了转换，而本地Nginx却没有这个问题，为此只能下载后修改文件format格式。
+
 dos格式文件传输到unix系统时,会在每行的结尾多一个^M，即dos文件中的换行符“\r\n”会被转换为unix文件中的换行符“\n”，而此文件若是一个可执行文件的话，会导致此文件不能被执行。
 
 ```bash
@@ -70,13 +72,15 @@ source xpress_install/git.sh
 wget https://www.kernel.org/pub/software/scm/git/$GIT_VERSION.tar.gz 
 ```
 
-* 2 使用:
+* 2 命令行执行：
 
 ```
 例如：放置于IP：10.0.30.2的nginx静态目录中，直接在命令行执行：
 
 sh -c "$(curl -s http://10.0.30.2/install/tools/git.sh)" && source /etc/profile
 ```
+
+
 
 ### Git
 
