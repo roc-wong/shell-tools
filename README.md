@@ -10,13 +10,29 @@ xpress_install目录下的脚本提供一键安装的功能，支持如下软件
 2. Redis
 3. Bash-support
 
+最近在七牛CDN上传了下列安装脚本，可以直接执行命令进行安装：
+
+```bash
+
+## 安装bash-support
+sh -c "$(curl -s http://olml6iu96.bkt.clouddn.com/script/bash_support.sh)" && source /etc/profile
+
+## 安装Git
+sh -c "$(curl -s http://olml6iu96.bkt.clouddn.com/script/git.sh)" && source /etc/profile
+
+## 安装Redis
+sh -c "$(curl -s http://olml6iu96.bkt.clouddn.com/script/redis.sh)" && source /etc/profile
+
+```
+
+
 **使用方式**
 
 以Git安装为例，介绍两种安装方式。
 
 **1. 直接执行**
 
-下载git.sh后直接安装：
+下载后直接安装：
 
 ```
 source xpress_install/git.sh
