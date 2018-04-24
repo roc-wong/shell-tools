@@ -32,7 +32,7 @@ curl http://olml6iu96.bkt.clouddn.com/script/redis.sh -O && vi +':w ++ff=unix' +
 
 **`vi +':w ++ff=unix' +':q' bash_support.sh` 说明**
 
-我将脚本上传到七牛CDN后，下载后发现无法执行，提示`shell syntax error: unexpected end of file`，猜测是在上传过程中进行了转换，而本地Nginx却没有这个问题，为此只能下载后修改文件format格式。
+我将脚本上传到七牛CDN后，下载后发现无法执行，提示`shell syntax error: unexpected end of file`，猜测是在上传过程中进行了转换，而本地Nginx却没有这个问题，为此只能修改文件format格式。
 
 dos格式文件传输到unix系统时,会在每行的结尾多一个^M，即dos文件中的换行符“\r\n”会被转换为unix文件中的换行符“\n”，而此文件若是一个可执行文件的话，会导致此文件不能被执行。
 
@@ -40,7 +40,10 @@ dos格式文件传输到unix系统时,会在每行的结尾多一个^M，即dos�
 ## 使用vim
 
 # vi exec.sh  
- :set ff=unix(或者:set fileformat=unix)  
+ :set ff=unix
+
+#(或者)
+ :set fileformat=unix   
 # :wq
 ```
 
