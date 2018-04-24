@@ -10,27 +10,49 @@ xpress_install目录下的脚本提供一键安装的功能，支持如下软件
 2. Redis
 3. Bash-support
 
+
+### 使用方式
+
+#### 1. 命令行直接执行
+
 最近在七牛CDN上传了下列安装脚本，可以直接执行命令进行安装：
 
 ```bash
 
 ## 安装bash-support
-sh -c "$(curl -s http://olml6iu96.bkt.clouddn.com/script/bash_support.sh)" && source /etc/profile
+curl http://olml6iu96.bkt.clouddn.com/script/bash_support.sh -O && vi +':w ++ff=unix' +':q' bash_support.sh && sh bash_support.sh
 
 ## 安装Git
-sh -c "$(curl -s http://olml6iu96.bkt.clouddn.com/script/git.sh)" && source /etc/profile
+curl http://olml6iu96.bkt.clouddn.com/script/git.sh -O && vi +':w ++ff=unix' +':q' git.sh && sh git.sh && source /etc/profile
 
 ## 安装Redis
-sh -c "$(curl -s http://olml6iu96.bkt.clouddn.com/script/redis.sh)" && source /etc/profile
+curl http://olml6iu96.bkt.clouddn.com/script/redis.sh -O && vi +':w ++ff=unix' +':q' redis.sh && sh redis.sh && source /etc/profile
 
 ```
 
+**`vi +':w ++ff=unix' +':q' bash_support.sh` 说明**
 
-**使用方式**
+dos格式文件传输到unix系统时,会在每行的结尾多一个^M，即dos文件中的换行符“\r\n”会被转换为unix文件中的换行符“\n”，而此文件若是一个可执行文件的话，会导致此文件不能被执行。
+
+```bash
+## 使用vim
+
+# vi exec.sh  
+ :set ff=unix(或者:set fileformat=unix)  
+# :wq
+```
+
+如果想在shell中直接调用，可以执行`vi +':w ++ff=unix' +':q' ${file}`，但是要严格注意上面空格的位置，不能多不能少。
+
+参考：
+
+* [convert-dos-line-endings-to-linux-line-endings-in-vim][2]
+* [shell批处理中利用vi设置文件的fileformat][3]
+
 
 以Git安装为例，介绍两种安装方式。
 
-**1. 直接执行**
+#### 2. 下载脚本后执行
 
 下载后直接安装：
 
@@ -38,7 +60,7 @@ sh -c "$(curl -s http://olml6iu96.bkt.clouddn.com/script/redis.sh)" && source /e
 source xpress_install/git.sh
 ```
 
-**2. 二次加工，修改后执行(适用于局域网)**
+#### 3. 二次加工，修改后执行(适用于局域网)**
 
 由于Git源码下载速度较慢，可另行下载Git源码，将之与git.sh脚本放置于nginx静态目录中，修改git.sh脚本中Git源码的下载地址，以便在局域网中使用。
 
@@ -145,3 +167,5 @@ troubleshoot目录下的脚本主要用户故障备份。
 
       
   [1]: https://roc-wong.github.io/blog/2018/02/bash-support-vim-Bash-IDE.html
+  [2]: https://stackoverflow.com/questions/82726/convert-dos-line-endings-to-linux-line-endings-in-vim
+  [3]: http://fandayrockworld.iteye.com/blog/1336096
