@@ -1,31 +1,115 @@
 # shell-tools
 
-开发过程中常用shell脚本。
+常用shell脚本工具箱，提供一键安装、故障备份等功能。
 
 ## 一键安装
 
-### 安装Git
+xpress_install目录下的脚本提供一键安装的功能，支持如下软件安装：
 
-**方式一**
+1. Git
+2. Redis
+3. Bash-support
+
+**使用方式**
+
+以Git安装为例，介绍两种安装方式。
+
+**1. 直接执行**
 
 下载git.sh后直接安装：
+
 ```
 source xpress_install/git.sh
 ```
 
-**方式二**
+**2. 按需修改(适用于局域网)**
 
-由于git源码下载速度较慢，可将下载后的源码和git.sh脚本放置于nginx静态目录中，修改脚本中Git源码的下载地址，以便在公司局域网中使用。
+由于Git源码下载速度较慢，可另行下载Git源码，将之与git.sh脚本放置于nginx静态目录中，修改git.sh脚本中Git源码的下载地址，以便在局域网中使用。
 
 * 1 修改git.sh文件中源码下载路径：
+
 ```
 wget https://www.kernel.org/pub/software/scm/git/$GIT_VERSION.tar.gz 
 ```
 
-* 2 使用
+* 2 使用:
+
 ```
 例如：放置于IP：10.0.30.2的nginx静态目录中：
 
 sh -c "$(curl -s http://10.0.30.2/install/tools/git.sh)" && source /etc/profile
 ```
 
+### Git
+
+安装版本：V2.9.5
+
+安装目录：/usr/local/git
+
+默认配置：
+
+```
+git config --global alias.co "checkout"
+git config --global alias.ci "commit"
+git config --global alias.br "branch"
+git config --global alias.st "status"
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset' --abbrev-commit"
+```
+
+### Redis
+
+安装版本：Redis 4.0.9
+
+安装目录：/usr/local/redis-4.0.9，默认增加软链接: /usr/local/redis -> redis-4.0.9/
+
+默认配置：
+
+1. 将`redis.conf`配置文件移动到`/usr/local/redis/etc`
+2. 将`mkreleasehdr.sh redis-benchmark redis-check-aof redis-cli redis-server /usr/local/redis/bin`移动到`/usr/local/redis/etc`
+3. 后台启动redis服务，`redis.conf` -> `daemonize yes`
+4. 将redis添加到系统服务。启动脚本：`/etc/init.d/redis`
+5. 环境变量配置：`/etc/profile.d/redis.sh`
+
+
+提醒配置：
+
+**内存分配策略**
+
+内核参数：overcommit_memory 
+
+可选值：0、1、2。
+* 0， 表示内核将检查是否有足够的可用内存供应用进程使用；如果有足够的可用内存，内存申请允许；否则，内存申请失败，并把错误返回给应用进程。
+* 1， 表示内核允许分配所有的物理内存，而不管当前的内存状态如何。
+* 2， 表示内核允许分配超过所有物理内存和交换空间总和的内存
+
+> 什么是Overcommit和OOM
+  
+    Linux对大部分申请内存的请求都回复"yes"，以便能跑更多更大的程序。因为申请内存后，并不会马上使用内存。这种技术叫做Overcommit。
+    当linux发现内存不足时，会发生OOM killer(OOM=out-of-memory)。它会选择杀死一些进程(用户态进程，不是内核线程)，以便释放内存。
+    当oom-killer发生时，linux会选择杀死哪些进程？选择进程的函数是oom_badness函数(在mm/oom_kill.c中)，该函数会计算每个进程的点数(0~1000)。点数越高，这个进程越有可能被杀死。
+    每个进程的点数跟oom_score_adj有关，而且oom_score_adj可以被设置(-1000最低，1000最高)。
+
+
+**修改配置/etc/sysctl.conf**
+
+```
+vm.overcommit_memory = 1 
+
+## 使之生效
+sysctl -p 
+
+```
+
+### Bash-support
+
+`bash-support` 是一个高度定制化的`vim`插件，它允许你插入：文件头、补全语句、注释、函数、以及代码块。它也使你可以进行语法检查、使脚本可执行、一键启动调试器；而完成所有的这些而不需要关闭编辑器。
+
+它使用快捷键（映射），通过有组织地、一致的文件内容编写/插入，使得`bash`脚本编程变得有趣和愉快。
+
+插件当前版本是`4.3`，`4.0` 版本 重写了之前的` 3.12.1 `版本，`4.0` 及之后的版本基于一个全新的、更强大的、和之前版本模板语法不同的模板系统。
+
+了解更多，请参考博客：[如何用bash-support插件将Vim编辑器打造成编写Bash脚本的IDE][1]
+
+
+      
+  [1]: https://roc-wong.github.io/blog/2018/02/bash-support-vim-Bash-IDE.html

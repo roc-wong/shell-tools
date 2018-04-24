@@ -53,6 +53,7 @@ fi
 
 GIT_VERSION=git-2.9.5
 GIT_PATH=/usr/local/git/bin
+DOWNLOAD_PATH=https://www.kernel.org/pub/software/scm/git/$GIT_VERSION.tar.gz
 
 #-------------------------------------------------------------------------------
 # 安装依赖的软件
@@ -63,8 +64,7 @@ yum install -y wget autoconf make gcc curl-devel expat-devel gettext-devel opens
 #-------------------------------------------------------------------------------
 # 下载git
 #-------------------------------------------------------------------------------
-wget https://www.kernel.org/pub/software/scm/git/$GIT_VERSION.tar.gz 
-#wget http://10.0.30.2/install/tools/git-2.9.5.tar.gz
+wget $DOWNLOAD_PATH
 
 
 #-------------------------------------------------------------------------------
