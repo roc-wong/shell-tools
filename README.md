@@ -22,7 +22,7 @@ xpress_install目录下的脚本提供一键安装的功能，支持如下软件
 source xpress_install/git.sh
 ```
 
-**2. 按需修改(适用于局域网)**
+**2. 二次加工，修改后执行(适用于局域网)**
 
 由于Git源码下载速度较慢，可另行下载Git源码，将之与git.sh脚本放置于nginx静态目录中，修改git.sh脚本中Git源码的下载地址，以便在局域网中使用。
 
@@ -35,18 +35,18 @@ wget https://www.kernel.org/pub/software/scm/git/$GIT_VERSION.tar.gz
 * 2 使用:
 
 ```
-例如：放置于IP：10.0.30.2的nginx静态目录中：
+例如：放置于IP：10.0.30.2的nginx静态目录中，直接在命令行执行：
 
 sh -c "$(curl -s http://10.0.30.2/install/tools/git.sh)" && source /etc/profile
 ```
 
 ### Git
 
-安装版本：V2.9.5
+**安装版本**：V2.9.5
 
-安装目录：/usr/local/git
+**安装目录**：/usr/local/git
 
-默认配置：
+**默认配置**：
 
 ```
 git config --global alias.co "checkout"
@@ -58,11 +58,13 @@ git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Crese
 
 ### Redis
 
-安装版本：Redis 4.0.9
+**安装版本**：Redis 4.0.9
 
-安装目录：/usr/local/redis-4.0.9，默认增加软链接: /usr/local/redis -> redis-4.0.9/
+**安装目录**：/usr/local/redis-4.0.9，默认增加软链接: /usr/local/redis -> redis-4.0.9/
 
-默认配置：
+**默认配置**：
+
+redis.sh安装脚本默认执行了如下配置：
 
 1. 将`redis.conf`配置文件移动到`/usr/local/redis/etc`
 2. 将`mkreleasehdr.sh redis-benchmark redis-check-aof redis-cli redis-server /usr/local/redis/bin`移动到`/usr/local/redis/etc`
@@ -71,7 +73,9 @@ git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Crese
 5. 环境变量配置：`/etc/profile.d/redis.sh`
 
 
-提醒配置：
+**提醒配置**：
+
+在安装过程中，如果出现红色字体的输出，表示建议进行的配置，但是脚本并未自动设置，需要手工配置。Redis.sh建议配置主要为内存分配策略。
 
 **内存分配策略**
 
@@ -84,7 +88,7 @@ git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Crese
 
 > 什么是Overcommit和OOM
   
-    Linux对大部分申请内存的请求都回复"yes"，以便能跑更多更大的程序。因为申请内存后，并不会马上使用内存。这种技术叫做Overcommit。
+>   Linux对大部分申请内存的请求都回复"yes"，以便能跑更多更大的程序。因为申请内存后，并不会马上使用内存。这种技术叫做Overcommit。
     当linux发现内存不足时，会发生OOM killer(OOM=out-of-memory)。它会选择杀死一些进程(用户态进程，不是内核线程)，以便释放内存。
     当oom-killer发生时，linux会选择杀死哪些进程？选择进程的函数是oom_badness函数(在mm/oom_kill.c中)，该函数会计算每个进程的点数(0~1000)。点数越高，这个进程越有可能被杀死。
     每个进程的点数跟oom_score_adj有关，而且oom_score_adj可以被设置(-1000最低，1000最高)。
@@ -110,6 +114,18 @@ sysctl -p
 
 了解更多，请参考博客：[如何用bash-support插件将Vim编辑器打造成编写Bash脚本的IDE][1]
 
+
+
+## 故障备份
+
+troubleshoot目录下的脚本主要用户故障备份。
+
+### JVM Dump
+
+每次线上环境一出问题，大家就慌了，通常最直接的办法回滚重启，以减少故障时间，这样现场就被破坏了，要想事后查问题就麻烦了，有些问题必须在线上的大压力下才会发生，线下测试环境很难重现，不太可能让开发或 Appops 在重启前，先手工将出错现场所有数据备份一下，所以最好在 kill 脚本之前调用 dump，进行自动备份，这样就不会有人为疏忽。 
+`dump.sh`的备份信息涵盖操作系统和JVM，主要用到的命令包括：jstack、jinfo、jstat、jmap、lsof、sar、uptime、free、vmstat、mpstat、iostat、netstat。
+
+> 使用方式：\"dump.sh -p jvm进程号\"指定jvm进程进行备份，不使用-p参数时，默认查找tomcat用户对应的java进程。
 
       
   [1]: https://roc-wong.github.io/blog/2018/02/bash-support-vim-Bash-IDE.html
