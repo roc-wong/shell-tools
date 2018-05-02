@@ -28,6 +28,21 @@ set -e
 #set -o nounset                             
 
 
+export debug=false
+#---  FUNCTION  ----------------------------------------------------------------
+#          NAME:  DEBUG
+#   DESCRIPTION:  调试函数 
+#    PARAMETERS:  
+#       RETURNS:  
+#-------------------------------------------------------------------------------
+DEBUG ()
+{
+	if [ "$debug" = "true" ]; then
+        	$@
+    	fi
+}	# ----------  end of function DEBUG  ----------
+
+
 # Use colors, but only if connected to a terminal, and that terminal
 # supports them.
 if which tput >/dev/null 2>&1; then
@@ -52,7 +67,7 @@ fi
 
 
 MYSQL_DOWNLOAD_PATH=https://cdn.mysql.com//Downloads/MySQL-5.7/mysql-5.7.22-linux-glibc2.12-x86_64.tar.gz
-MYSQL_VERSION=mysql
+MYSQL=mysql
 MYSQL_PATH=/usr/local/mysql
 
 #-------------------------------------------------------------------------------
@@ -65,14 +80,13 @@ yum -y install numactl.x86_64
 
 # 下载mysql
 #-------------------------------------------------------------------------------
-wget -O ${MYSQL_VERSION}.tar.gz $MYSQL_DOWNLOAD_PATH
+DEBUG wget -O ${MYSQL}.tar.gz $MYSQL_DOWNLOAD_PATH
 
 #-------------------------------------------------------------------------------
 # 解压
 #-------------------------------------------------------------------------------
-mkdir ${MYSQL_VERSION} && tar -xzvf ${MYSQL_VERSION}.tar.gz -C ./${MYSQL_VERSION} --strip-components 1
-#mv mysql-5.7.22-linux-glibc2.12-x86_64 ${MYSQL_VERSION}
-mv ${MYSQL_VERSION} /usr/local/
+mkdir ${MYSQL} && tar -xzvf ${MYSQL}.tar.gz -C ./${MYSQL} --strip-components 1
+mv ${MYSQL} /usr/local/
 
 
 #-------------------------------------------------------------------------------
