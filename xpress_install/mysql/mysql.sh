@@ -28,7 +28,7 @@ set -e
 set -o nounset                             
 
 
-export debug=true
+export debug=false
 #---  FUNCTION  ----------------------------------------------------------------
 #          NAME:  DEBUG
 #   DESCRIPTION:  调试函数 
@@ -168,7 +168,7 @@ chkconfig --add mysql
 #-------------------------------------------------------------------------------
 echo "#!/bin/bash -" > /etc/profile.d/mysql.sh
 echo "export MYSQL_HOME=/usr/local/mysql" >> /etc/profile.d/mysql.sh
-echo "export PATH=\"$MYSQL_PATH/bin:\$PATH\"" >> /etc/profile.d/mysql.sh
+echo "export PATH='\$MYSQL_HOME/bin:\$PATH'" >> /etc/profile.d/mysql.sh
 chmod +x /etc/profile.d/mysql.sh
 source /etc/profile.d/mysql.sh
 
