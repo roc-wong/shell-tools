@@ -25,7 +25,7 @@ export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 set -e
 
 # Treat unset variables as an error
-#set -o nounset                             
+set -o nounset                             
 
 
 export debug=false
@@ -85,7 +85,11 @@ DEBUG wget -O ${MYSQL}.tar.gz $MYSQL_DOWNLOAD_PATH
 #-------------------------------------------------------------------------------
 # 解压
 #-------------------------------------------------------------------------------
-mkdir ${MYSQL} && tar -xzvf ${MYSQL}.tar.gz -C ./${MYSQL} --strip-components 1
+if [ ! -d "./${MYSQL}" ];then
+mkdir ${MYSQL}
+fi
+
+tar -xzvf ${MYSQL}.tar.gz -C ./${MYSQL} --strip-components 1
 mv ${MYSQL} /usr/local/
 
 
@@ -151,8 +155,8 @@ echo "pid-file=/var/run/mysqld/mysqld.pid" >> /etc/my.cnf
 #-------------------------------------------------------------------------------
 cp /usr/local/mysql/support-files/mysql.server  /etc/init.d/mysql
 
-sed '46c basedir=/usr/local/mysql' /etc/init.d/mysql
-sed '47c datadir=/usr/local/mysql/data' /etc/init.d/mysql
+sed -i '46c basedir=/usr/local/mysql' /etc/init.d/mysql
+sed -i '47c datadir=/usr/local/mysql/data' /etc/init.d/mysql
 
 chmod +x /etc/init.d/mysql
 
@@ -172,7 +176,10 @@ source /etc/profile.d/mysql.sh
 #-------------------------------------------------------------------------------
 # 验证
 #-------------------------------------------------------------------------------
-service mysql start && mysql -u root -p
+service mysql start
+
+echo -e "${RED} ---> If success, it will output password in ' A temporary password is generated for root@localhost: '. <--- \n"
+echo -e "       ---> Or you can find password in '/var/log/mysqld.log'. <--- ${NORMAL}"
 
 printf "${GREEN}"
 echo "                 .-~~~~~~~~~-._       _.-~~~~~~~~~-.                            "

@@ -50,8 +50,26 @@ fi
 
 
 #-------------------------------------------------------------------------------
+# 停止正在运行的mysql进程
+#-------------------------------------------------------------------------------
+echo -e "${RED} Kill mysql process if exists ... ${NORMAL}" 
+ps -ef | grep 'mysql' | grep '/usr/local/mysql' | grep -v grep | awk '{print $2}' | xargs kill -9
+
+### 按照用户杀死进程，但是由于mysql进程是root用户启动的。所以无法以这种方式执行
+#pgrep -u mysql | xargs kill -9
+
+### 循环方式杀死进程
+#mysql_pids=$(ps -ef | grep 'mysql' | grep '/usr/local/mysql' | grep -v grep | awk '{print $2}')
+#for pid in ${mysql_pids}
+#do
+#	kill -9 ${pid}
+#done
+
+
+#-------------------------------------------------------------------------------
 # 删除mysql安装目录
 #-------------------------------------------------------------------------------
+echo -e "${GREEN} remove mysql directory... ${NORMAL}\c"  
 rm -rf /usr/local/mysql
 
 
@@ -98,4 +116,4 @@ chkconfig --del mysql > /dev/null 2>&1
 #-------------------------------------------------------------------------------
 rm -rf /etc/profile.d/mysql.sh
 
-set +x
+#set +x
