@@ -28,7 +28,7 @@ set -e
 set -o nounset                             
 
 
-export debug=false
+export debug=true
 #---  FUNCTION  ----------------------------------------------------------------
 #          NAME:  DEBUG
 #   DESCRIPTION:  调试函数 
@@ -178,7 +178,7 @@ source /etc/profile.d/mysql.sh
 #-------------------------------------------------------------------------------
 service mysql start
 
-echo -e "${RED} ---> If success, it will output password in ' A temporary password is generated for root@localhost: '. <--- \n"
+echo -e "${RED} ---> If success, it will output password in '[Note] A temporary password is generated for root@localhost: '. <--- \n"
 echo -e "       ---> Or you can find password in '/var/log/mysqld.log'. <--- ${NORMAL}"
 
 printf "${GREEN}"
