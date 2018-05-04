@@ -85,7 +85,7 @@ cp /usr/local/${ZOOKEEPER}/conf/zoo_sample.cfg /usr/local/${ZOOKEEPER}/conf/zoo.
 cat >> /usr/local/${ZOOKEEPER}/conf/zoo.cfg  << EOF
 
 dataDir=/usr/local/${ZOOKEEPER}/data
-dataLogDir=/usr/local/${ZOOKEEPER}/logs"
+dataLogDir=/usr/local/${ZOOKEEPER}/logs
 
 EOF
 
@@ -134,7 +134,7 @@ chkconfig --add zookeeper
 cat > /etc/profile.d/zookeeper.sh << EOF
 #!/bin/bash -
 export ZOOKEEPER_HOME=/usr/local/${ZOOKEEPER}
-export PATH=\$ZOOKEEPER_PATH/bin:\$PATH
+export PATH=\$PATH:\$ZOOKEEPER_HOME/bin
 EOF
 
 chmod +x /etc/profile.d/zookeeper.sh
@@ -156,4 +156,5 @@ echo "     .\'//.-\"                 \`-.  |  .-\'                 \"-.\\\`.    
 echo "   .\'//______.============-..   \ | /   ..-============.______\\\`.            "
 echo " .\'______________________________\|/______________________________\`.          "
 echo "${NORMAL}"
+
 set +x
