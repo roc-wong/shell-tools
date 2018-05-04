@@ -64,7 +64,7 @@ yum install -y wget
 
 # 下载zookeeper
 #-------------------------------------------------------------------------------
-#wget -O ${ZOOKEEPER}.tar.gz ${ZOOKEEPER_DOWNLOAD_PATH}
+wget ${ZOOKEEPER_DOWNLOAD_PATH}
 
 
 #-------------------------------------------------------------------------------
