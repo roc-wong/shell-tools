@@ -28,7 +28,6 @@ PASSWORD=$1
 echo "password is ${PASSWORD}"
 mysql -u root -p${PASSWORD} --connect-expired-password  <<EOF
 
-use mysql;
 SET PASSWORD FOR 'root'@'localhost' = PASSWORD('root');
 grant all privileges  on *.* to root@'%' identified by 'password';
 flush privileges;
