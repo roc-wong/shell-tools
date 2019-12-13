@@ -79,7 +79,7 @@ cd $NGINX_VERSION
 # 给 Nginx 打补丁
 patch -p1 < ../nginx_upstream_check_module-master/check_$NGINX_VERSION_NUM+.patch
 
-./configure --add-module=../nginx_upstream_check_module-master --prefix=/usr/local/nginx --conf-path=/usr/local/nginx/conf/nginx.conf --with-http_gzip_static_module --with-http_ssl_module 
+./configure --add-module=../nginx_upstream_check_module-master --prefix=/usr/local/nginx --conf-path=/usr/local/nginx/conf/nginx.conf --with-http_gzip_static_module --with-http_ssl_module --with-http_stub_status_module
 make && make install
 
 
