@@ -109,7 +109,7 @@ chkconfig --add redis
 #-------------------------------------------------------------------------------
 echo "#!/bin/bash -" > /etc/profile.d/redis.sh
 echo "export REDIS_HOME=/usr/local/redis" >> /etc/profile.d/redis.sh
-echo "export PATH=\"$REDIS_PATH:\$PATH\"" >> /etc/profile.d/redis.sh
+echo "export PATH=\"$REDIS_HOME/bin:\$PATH\"" >> /etc/profile.d/redis.sh
 chmod +x /etc/profile.d/redis.sh
 source /etc/profile.d/redis.sh
 
